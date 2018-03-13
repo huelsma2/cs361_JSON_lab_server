@@ -7,49 +7,49 @@
  */
 public class Employee {
 
-	private String _fname, _lname, _phone, _department, _title, _gender;
+	private String fname, lname, phone, dept, title, gender;
 
 	public String get_lname() {
-		return _lname;
+		return lname;
 	}
 	public String get_fname() {
-		return _fname;
+		return fname;
 	}
 
 	public Employee(String fname, String lname, String dept, String phone, String gender, String title)
 	{
-		_fname = fname;
-		_lname = lname;
-		_phone = phone;
-		_department = dept;
-		_gender=gender;
-		_title=title;
+		this.fname = fname;
+		this.lname = lname;
+		this.phone = phone;
+		this.dept = dept;
+		this.gender=gender;
+		this.title=title;
 	}
 
 	public void set_fname(String fname) {
-		_fname = fname;
+		this.fname = fname;
 	}
 
 	public void set_lname(String lname) {
-		_lname = lname;
+		this.lname = lname;
 	}
 
 	public void set_phone(String phone) {
-		_phone = phone;
+		this.phone = phone;
 	}
 
 	public void set_department(String department) {
-		_department = department;
+		this.dept = department;
 	}
 	
 	public void set_gender(String gender) {
-		_gender = gender;
+		this.gender = gender;
 	}
 	
 	
 	@Override
 	public String toString()
 	{
-		return _title + " " + _lname + ", " + _fname + " (" + _gender + ") in " + _department + " Contact: "+ _phone;
+		return title + " " + lname + ", " + fname + " (" + gender + ") in " + dept + " Contact: "+ phone;
 	}
 }

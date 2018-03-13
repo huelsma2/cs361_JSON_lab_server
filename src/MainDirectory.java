@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -54,7 +55,7 @@ public class MainDirectory {
 			try {
 				if (!sharedResponse.isEmpty()) {
 					System.out.println(response);
-					ArrayList<Employee> fromJson = g.fromJson(sharedResponse,
+					ArrayList<Employee> fromJson = g.fromJson(sharedResponse.split(" ")[1],
 							new TypeToken<Collection<Employee>>() {
 							}.getType());
 
@@ -63,7 +64,7 @@ public class MainDirectory {
 					for (Employee e : fromJson) {
 						response += e + "\n";
 					}
-					Collections.sort(fromJson);
+					//Collections.sort(fromJson);
 					response += "\nAfter sort\n";
 					for (Employee e : fromJson) {
 						response += e + "\n";
@@ -112,7 +113,7 @@ public class MainDirectory {
 
             System.out.println("response: " + sharedResponse);
 
-            runCommand(sharedResponse);
+            //runCommand(sharedResponse);
             //Desktop dt = Desktop.getDesktop();
             //dt.open(new File("raceresults.html"));
 
