@@ -22,7 +22,7 @@ import com.sun.net.httpserver.HttpServer;
 
 public class MainDirectory {
 	
-	ArrayList<Employee> dir = new ArrayList<Employee>();
+	static ArrayList<Employee> dir = new ArrayList<Employee>();
 	
     // a shared area where we get the POST data and then use it in the other handler
     static String sharedResponse = "";
@@ -51,11 +51,37 @@ public class MainDirectory {
             String response = "Begin of response\n";
 			Gson g = new Gson();
 			// set up the header
+			String echo = "";
             System.out.println(response);
 			try {
 				if (!sharedResponse.isEmpty()) {
 					System.out.println(response);
-					ArrayList<Employee> fromJson = g.fromJson(sharedResponse.split(" ")[1],
+					switch(sharedResponse.split(" ")[0])
+					{
+					case "ADD":
+						{ArrayList<Employee> fromJson = g.fromJson(sharedResponse.split(" ")[1],
+								new TypeToken<Collection<Employee>>() {
+								}.getType());
+						dir.addAll(fromJson);
+						echo = "Employees added:\n";
+						for(Employee e : fromJson)
+							echo+= e.toString() + "\n";
+						System.out.println(echo);
+						break;}
+					case "CLEAR":
+						{dir.clear();
+						System.out.println("Directory cleared!!!");
+						break;}
+					case "PRINT":
+						{dir.sort(new LexCompare());
+						echo = "Directory: \n";
+						for(Employee e: dir) echo += e.toString() + "\n";
+						System.out.println(echo);
+						break;}
+					default:
+						System.out.println("Invalid command received...");
+					}
+					/*ArrayList<Employee> fromJson = g.fromJson(sharedResponse.split(" ")[1],
 							new TypeToken<Collection<Employee>>() {
 							}.getType());
 
@@ -64,11 +90,12 @@ public class MainDirectory {
 					for (Employee e : fromJson) {
 						response += e + "\n";
 					}
-					//Collections.sort(fromJson);
+					fromJson.sort(new LexCompare());
+					
 					response += "\nAfter sort\n";
 					for (Employee e : fromJson) {
 						response += e + "\n";
-					}
+					}*/
 				}
 			} catch (JsonSyntaxException e) {
 				e.printStackTrace();
@@ -76,11 +103,26 @@ public class MainDirectory {
             response += "End of response\n";
             System.out.println(response);
             // write out the response
-            t.sendResponseHeaders(200, response.length());
+            //t.sendResponseHeaders(200, response.length());
+            t.sendResponseHeaders(200, echo.length());
             OutputStream os = t.getResponseBody();
-            os.write(response.getBytes());
+            //os.write(response.getBytes());
+            os.write(echo.getBytes());
             os.close();
         }
+        
+        public class LexCompare implements Comparator<Employee>
+    	{
+
+    		@Override
+    		public int compare(Employee arg0, Employee arg1) {
+    			int ret = arg0.get_lname().compareTo(arg1.get_lname());
+    			if (ret==0) ret = arg0.get_fname().compareTo(arg1.get_fname());
+    			return ret;
+    		}
+
+    		
+    	}
     }
 
     static class PostHandler implements HttpHandler {
@@ -168,7 +210,7 @@ public class MainDirectory {
 			clear();
 	}
 	
-	private class LexCompare implements Comparator<Employee>
+	public class LexCompare implements Comparator<Employee>
 	{
 
 		@Override
