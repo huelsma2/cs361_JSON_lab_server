@@ -70,7 +70,8 @@ public class MainDirectory {
 						break;}
 					case "CLEAR":
 						{dir.clear();
-						System.out.println("Directory cleared!!!");
+						echo += "Directory cleared.";
+						System.out.println(echo);
 						break;}
 					case "PRINT":
 						{dir.sort(new LexCompare());
