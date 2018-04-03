@@ -144,13 +144,10 @@ public class MainDirectory {
         			+ "<th>Department</th>"
         			+ "<th>Phone</th>"
         			+ "<th>Gender</th></tr>";
-        	boolean color = false;
         	for(Employee e : dir)
         	{
-        		html+= "<tr ";
-        		if(color) html+= "class=\"Tcolor1\">";
-        		else html+= "class=\"Tcolor2\">";
-        		html+= "<td>" + e.getTitle() + "</td>"
+        		html+= "<tr>"
+        				+ "<td>" + e.getTitle() + "</td>"
         				+ "<td>" + e.get_fname() + "</td>"
         				+ "<td>" + e.get_lname() + "</td>"
         				+ "<td>" + e.getDept() + "</td>"
