@@ -34,7 +34,7 @@ public class MainDirectory {
         HttpServer server = HttpServer.create(new InetSocketAddress(8000), 0);
 
         // create a context to get the request to display the results
-        server.createContext("/displayresults", new DisplayHandler());
+        server.createContext("/displayresults", new RawTextDisplayer());
 
         // create a context to get the request for the POST
         server.createContext("/sendresults",new PostHandler());
@@ -45,7 +45,7 @@ public class MainDirectory {
         server.start();
     }
 
-    static class DisplayHandler implements HttpHandler {
+    static class RawTextDisplayer implements HttpHandler {
         public void handle(HttpExchange t) throws IOException {
 
             String response = "Begin of response\n";
