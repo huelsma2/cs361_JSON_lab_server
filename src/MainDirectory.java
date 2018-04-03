@@ -50,43 +50,10 @@ public class MainDirectory {
         public void handle(HttpExchange t) throws IOException {
 
             String response = "Begin of response\n";
-			Gson g = new Gson();
 			// set up the header
 			String echo = "";
             System.out.println(response);
-			try {
-				if (!sharedResponse.isEmpty()) {
-					System.out.println(response);
-					switch(sharedResponse.split(" ")[0])
-					{
-					case "ADD":
-						{ArrayList<Employee> fromJson = g.fromJson(sharedResponse.split(" ")[1],
-								new TypeToken<Collection<Employee>>() {
-								}.getType());
-						dir.addAll(fromJson);
-						echo = "Employees added:\n";
-						for(Employee e : fromJson)
-							echo+= e.toString() + "\n";
-						System.out.println(echo);
-						break;}
-					case "CLEAR":
-						{dir.clear();
-						echo += "Directory cleared.";
-						System.out.println(echo);
-						break;}
-					case "PRINT":
-						{dir.sort(new LexCompare());
-						echo = "Directory: \n";
-						for(Employee e: dir) echo += e.toString() + "\n";
-						System.out.println(echo);
-						break;}
-					default:
-						System.out.println("Invalid command received...");
-					}
-				}
-			} catch (JsonSyntaxException e) {
-				e.printStackTrace();
-			}
+			
             response += "End of response\n";
             System.out.println(response);
             // write out the response
@@ -116,10 +83,10 @@ public class MainDirectory {
         public void handle(HttpExchange t) throws IOException {
 
             String response = "Begin of response\n";
-			Gson g = new Gson();
 			// set up the header
 			String echo = "";
             System.out.println(response);
+			
             dir.sort(new LexCompare());
 			echo = toTable();
             response += "End of response\n";
@@ -203,7 +170,40 @@ public class MainDirectory {
             String postResponse = "ROGER JSON RECEIVED";
 
             System.out.println("response: " + sharedResponse);
-
+            String echo = "";
+			Gson g = new Gson();
+            try {
+				if (!sharedResponse.isEmpty()) {
+					switch(sharedResponse.split(" ")[0])
+					{
+					case "ADD":
+						{ArrayList<Employee> fromJson = g.fromJson(sharedResponse.split(" ")[1],
+								new TypeToken<Collection<Employee>>() {
+								}.getType());
+						dir.addAll(fromJson);
+						echo = "Employees added:\n";
+						for(Employee e : fromJson)
+							echo+= e.toString() + "\n";
+						System.out.println(echo);
+						break;}
+					case "CLEAR":
+						{dir.clear();
+						echo += "Directory cleared.";
+						System.out.println(echo);
+						break;}
+					case "PRINT":
+						{dir.sort(new LexCompare());
+						echo = "Directory: \n";
+						for(Employee e: dir) echo += e.toString() + "\n";
+						System.out.println(echo);
+						break;}
+					default:
+						System.out.println("Invalid command received...");
+					}
+				}
+			} catch (JsonSyntaxException e) {
+				e.printStackTrace();
+			}
             //runCommand(sharedResponse);
             //Desktop dt = Desktop.getDesktop();
             //dt.open(new File("raceresults.html"));
@@ -216,6 +216,18 @@ public class MainDirectory {
 
             outputStream.close();
         }
+        public class LexCompare implements Comparator<Employee>
+    	{
+
+    		@Override
+    		public int compare(Employee arg0, Employee arg1) {
+    			int ret = arg0.get_lname().compareTo(arg1.get_lname());
+    			if (ret==0) ret = arg0.get_fname().compareTo(arg1.get_fname());
+    			return ret;
+    		}
+
+    		
+    	}
     }
     
 	@SuppressWarnings("unchecked")
