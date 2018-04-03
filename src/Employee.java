@@ -15,6 +15,22 @@ public class Employee {
 	public String get_fname() {
 		return fname;
 	}
+	public String getTitle()
+	{
+		return title;
+	}
+	public String getPhone()
+	{
+		return phone;
+	}
+	public String getGender()
+	{
+		return gender;
+	}
+	public String getDept()
+	{
+		return dept;
+	}
 
 	public Employee(String fname, String lname, String dept, String phone, String gender, String title)
 	{

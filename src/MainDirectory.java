@@ -35,6 +35,7 @@ public class MainDirectory {
 
         // create a context to get the request to display the results
         server.createContext("/displayresults", new RawTextDisplayer());
+        server.createContext("/displayresults/directory", new TableDisplayer());
 
         // create a context to get the request for the POST
         server.createContext("/sendresults",new PostHandler());
@@ -82,21 +83,6 @@ public class MainDirectory {
 					default:
 						System.out.println("Invalid command received...");
 					}
-					/*ArrayList<Employee> fromJson = g.fromJson(sharedResponse.split(" ")[1],
-							new TypeToken<Collection<Employee>>() {
-							}.getType());
-
-					System.out.println(response);
-					response += "Before sort\n";
-					for (Employee e : fromJson) {
-						response += e + "\n";
-					}
-					fromJson.sort(new LexCompare());
-					
-					response += "\nAfter sort\n";
-					for (Employee e : fromJson) {
-						response += e + "\n";
-					}*/
 				}
 			} catch (JsonSyntaxException e) {
 				e.printStackTrace();
@@ -125,6 +111,69 @@ public class MainDirectory {
     		
     	}
     }
+    
+    static class TableDisplayer implements HttpHandler {
+        public void handle(HttpExchange t) throws IOException {
+
+            String response = "Begin of response\n";
+			Gson g = new Gson();
+			// set up the header
+			String echo = "";
+            System.out.println(response);
+            dir.sort(new LexCompare());
+			echo = toTable();
+            response += "End of response\n";
+            System.out.println(response);
+            // write out the response
+            //t.sendResponseHeaders(200, response.length());
+            t.sendResponseHeaders(200, echo.length());
+            OutputStream os = t.getResponseBody();
+            //os.write(response.getBytes());
+            os.write(echo.getBytes());
+            os.close();
+        }
+        
+        private String toTable()
+        {
+        	String html = "<html><body>"
+        			+ "<h2> Directory </h2>"
+        			+ "<table style=\"width:100%\">"
+        			+ "<tr><th>Title</th>"
+        			+"<th>First Name</th>"
+        			+ "<th>Last Name</th>"
+        			+ "<th>Department</th>"
+        			+ "<th>Phone</th>"
+        			+ "<th>Gender</th></tr>";
+        	boolean color;
+        	for(Employee e : dir)
+        	{
+        		html+= "<tr>"
+        				+ "<td>" + e.getTitle() + "</td>"
+        				+ "<td>" + e.get_fname() + "</td>"
+        				+ "<td>" + e.get_lname() + "</td>"
+        				+ "<td>" + e.getDept() + "</td>"
+        				+ "<td>" + e.getPhone() + "</td>"
+        				+ "<td>" + e.getGender() + "</td>"
+        				+ "</tr>";
+        	}
+        	html+="</table></body></html>";
+        	return html;
+        }
+        
+        public class LexCompare implements Comparator<Employee>
+    	{
+
+    		@Override
+    		public int compare(Employee arg0, Employee arg1) {
+    			int ret = arg0.get_lname().compareTo(arg1.get_lname());
+    			if (ret==0) ret = arg0.get_fname().compareTo(arg1.get_fname());
+    			return ret;
+    		}
+
+    		
+    	}
+    }
+    
 
     static class PostHandler implements HttpHandler {
         public void handle(HttpExchange transmission) throws IOException {
