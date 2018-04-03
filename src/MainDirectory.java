@@ -89,7 +89,11 @@ public class MainDirectory {
         
         private String toTable()
         {
-        	String html = "<html><body>"
+        	String html = "<html>"
+        			+ "<head>"
+        			+ "<link rel=\"stylesheet\" href=\"style.css\">"
+        			+ "</head>"
+        			+ "<body>"
         			+ "<h2> Directory </h2>"
         			+ "<table style=\"width:100%\">"
         			+ "<tr><th>Title</th>"
