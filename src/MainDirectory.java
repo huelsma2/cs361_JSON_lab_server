@@ -64,19 +64,6 @@ public class MainDirectory {
             os.write(echo.getBytes());
             os.close();
         }
-        
-        public class LexCompare implements Comparator<Employee>
-    	{
-
-    		@Override
-    		public int compare(Employee arg0, Employee arg1) {
-    			int ret = arg0.get_lname().compareTo(arg1.get_lname());
-    			if (ret==0) ret = arg0.get_fname().compareTo(arg1.get_fname());
-    			return ret;
-    		}
-
-    		
-    	}
     }
     
     static class TableDisplayer implements HttpHandler {
