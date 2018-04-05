@@ -1,15 +1,19 @@
 table {
 	border-collapse: collapse;
-    border: 0px;
+    	border: 0px;
+	width: 100%;
 }
 tr:nth-child(odd) {
     background: lightgray;
     
 }
 
+th {
+	background: black:
+	color: white:
+}
 td { 
 	text-align: center;
-
 }
 
 
