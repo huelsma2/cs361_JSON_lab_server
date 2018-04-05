@@ -3,6 +3,7 @@
  */
 
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -23,6 +24,7 @@ import com.sun.net.httpserver.HttpServer;
 public class MainDirectory {
 	
 	static ArrayList<Employee> dir = new ArrayList<Employee>();
+	static final String _CSSfile = "style.css";
 	
     // a shared area where we get the POST data and then use it in the other handler
     static String sharedResponse = "";
@@ -34,8 +36,9 @@ public class MainDirectory {
         HttpServer server = HttpServer.create(new InetSocketAddress(8000), 0);
 
         // create a context to get the request to display the results
-        server.createContext("/displayresults", new RawTextDisplayer());
-        server.createContext("/displayresults/directory", new TableDisplayer());
+        server.createContext("/displayresults/raw", new RawTextDisplayer());
+        server.createContext("/displayresults", new TableDisplayer());
+        server.createContext("/displayresults/style.css", new CSSDisplayer());
 
         // create a context to get the request for the POST
         server.createContext("/sendresults",new PostHandler());
@@ -44,6 +47,21 @@ public class MainDirectory {
         // get it going
         System.out.println("Starting Server...");
         server.start();
+    }
+    static class CSSDisplayer implements HttpHandler {
+        public void handle(HttpExchange t) throws IOException {
+        	t.sendResponseHeaders(200, 0);
+            OutputStream output = t.getResponseBody();
+            FileInputStream fs = new FileInputStream(_CSSfile);
+            final byte[] buffer = new byte[0x10000];
+            int count = 0;
+            while ((count = fs.read(buffer)) >= 0) {
+                output.write(buffer, 0, count);
+            }
+            output.flush();
+            output.close();
+            fs.close();
+        }
     }
 
     static class RawTextDisplayer implements HttpHandler {
@@ -91,11 +109,11 @@ public class MainDirectory {
         {
         	String html = "<html>"
         			+ "<head>"
-        			+ "<link rel=\"stylesheet\" href=\"style.css\">"
+        			+ "<link rel=\"stylesheet\" href=\"displayresults/style.css\">"
         			+ "</head>"
         			+ "<body>"
-        			+ "<h2> Directory </h2>"
-        			+ "<table style=\"width:100%\">"
+        			+ "<h2> Company Directory </h2>"
+        			+ "<table>"
         			+ "<tr><th>Title</th>"
         			+"<th>First Name</th>"
         			+ "<th>Last Name</th>"
